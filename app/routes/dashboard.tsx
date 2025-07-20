@@ -1,7 +1,6 @@
-import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { AppHeader } from "@/app/components/app-header";
 import { AppFooter } from "@/app/components/app-footer";
+import { AppHeader } from "@/app/components/app-header";
 import { HealthStatsWidget } from "@/components/widgets/health-stats";
 import { QuickActionsCard } from "@/features/dashboard/navigation";
 import { RecentActivityCard } from "@/features/dashboard/recent-activity";

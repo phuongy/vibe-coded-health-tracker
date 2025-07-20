@@ -5,7 +5,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 
 ## Technology Stack
 - **Framework**: Remix with Vite
-- **Language**: TypeScript
+- **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS with shadcn/ui components
 - **Icons**: Lucide React
 - **Theme**: Dark/light mode with next-themes
@@ -13,6 +13,9 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Forms**: react-hook-form with zod validation
 - **UI Components**: Radix UI primitives with shadcn/ui
 - **Package Manager**: pnpm
+- **Navigation**: React Router with active link highlighting
+- **Linting**: ESLint with TypeScript support
+- **Build Tool**: Vite with Remix integration
 
 ## Code Style & Conventions
 
@@ -20,6 +23,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Always use namespace imports**: `import * as React from "react"`
 - **Never use default imports**: Don't use `import React from "react"`
 - **Use React namespace**: Access hooks as `React.useState`, `React.useEffect`, etc.
+- **Remove unused imports**: Only import React when actually using React hooks or JSX
 
 ### File Organization
 - Use `@/` alias for imports from the app directory (configured in tsconfig.json)
@@ -39,6 +43,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - Utilities go in `shared/lib/`
 - API functions go in `shared/lib/api.ts`
 - i18n configuration goes in `shared/lib/i18n.ts`
+- Theme provider goes in `shared/provider/theme-provider.tsx`
 
 ### Import Patterns
 - **Always use `@/` alias**: Never use `~` for imports
@@ -50,12 +55,15 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Utility imports**: `@/shared/lib/utils`
 - **API imports**: `@/shared/lib/api`
 - **i18n imports**: `@/shared/lib/i18n`
+- **App components**: `@/app/components/app-header`, `@/app/components/app-footer`
+- **Provider imports**: `@/shared/provider/theme-provider`
 
 ### Import Order
 1. React and external libraries
 2. Internal components and utilities (using @/ alias)
 3. Relative imports
 4. Type imports
+5. **ESLint enforced**: Use `pnpm lint --fix` to auto-fix import order
 
 ### FSD Import Rules
 - **Dependency Direction**: Higher layers can import from lower layers
@@ -63,6 +71,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **No Circular Dependencies**: Lower layers cannot import from higher layers
 - **No Index Files**: Import directly from component files
 - **Absolute Imports**: Use `@/` alias for cross-slice imports
+- **Valid Exports**: Only export files that actually exist
 
 ### Component Guidelines
 - Use functional components with TypeScript
@@ -71,7 +80,9 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - Follow React hooks best practices
 - Use proper accessibility attributes
 - Each component should be in its own directory with descriptive filename
-- Always use `import * as React from "react"` pattern
+- Always use `import * as React from "react"` pattern when using React hooks
+- Remove unused React imports from components that don't use hooks
+- Extract repeated classnames into helper functions for maintainability
 
 ### Internationalization (i18n)
 - **Always use translation keys**: Never hardcode strings in components
@@ -79,9 +90,11 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Translation keys**: Use descriptive, nested keys (e.g., `t("dashboard.title")`)
 - **Translation files**: All translations in `shared/lib/i18n.ts`
 - **Supported languages**: English (en), Spanish (es), French (fr)
-- **Language detection**: Automatic with localStorage fallback
+- **Language detection**: Automatic with localStorage fallback, defaults to English
 - **Error messages**: All error messages must be translatable
 - **Units and values**: All units and health metrics must be translatable
+- **Language selector**: Located in footer, no flag emojis
+- **Hook dependencies**: Include `t` in useEffect dependency arrays when used inside effects
 
 ### API Patterns
 - **Mock API functions**: Use `shared/lib/api.ts` for mock data
@@ -97,6 +110,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Translated validation**: All validation messages must be translatable
 - **Proper error handling**: Handle form submission errors gracefully
 - **Loading states**: Show loading states during form submission
+- **Default values**: Support pre-selected values for forms (e.g., stat types)
 
 ### Styling Guidelines
 - Use Tailwind CSS classes
@@ -105,6 +119,8 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - Support both light and dark themes
 - Use responsive design patterns
 - Use proper color contrast ratios
+- Extract repeated classnames into helper functions
+- Use nullish coalescing (`??`) instead of logical OR (`||`) for fallback values
 
 ### TypeScript Best Practices
 - Use strict TypeScript configuration
@@ -113,6 +129,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - Avoid `any` types
 - Use proper generic types where needed
 - Use proper type inference where possible
+- Fix all TypeScript errors before committing
 
 ## Component Patterns
 
@@ -122,10 +139,13 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - Global styles and theme providers
   - App-wide state management
   - i18n initialization and configuration
+  - Global components: AppHeader, AppFooter
 - **pages**: Page components
   - Route components with page-specific logic
   - Data fetching and page-level state
   - Composition of widgets and features
+  - Dashboard as initial page (`/dashboard`)
+  - Stat type pages: `/weight`, `/heart-rate`, `/sleep`, `/steps`
 - **widgets**: Self-contained page sections
   - Complex UI components that combine features
   - Page-specific business logic
@@ -136,6 +156,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - Feature-specific state management
   - API calls and data transformations
   - Form handling and validation
+  - AddEntryModal with pre-selected stat types
 - **entities**: Business entities
   - Data models and business logic
   - Entity-specific operations
@@ -161,7 +182,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - Focus on presentation and interaction
 - **Molecules**: Simple combinations of atoms
   - `shared/ui/molecules/theme-toggle/theme-toggle.tsx` - Combines Switch + Icons
-  - `shared/ui/molecules/language-switcher/language-switcher.tsx` - Language selection
+  - `shared/ui/molecules/language-switcher/language-switcher.tsx` - Language selection (no flag emojis)
   - Combine 2-3 atoms with simple logic
   - Handle basic state and interactions
   - Still reusable across different contexts
@@ -199,6 +220,26 @@ shared/ui/
     └── (future complex components)
 ```
 
+### App Components
+- **AppHeader**: Global navigation header with active link highlighting
+  - Dashboard title link
+  - Stat type navigation links (Weight, Heart Rate, Sleep, Steps)
+  - Theme toggle
+  - Add entry modal trigger
+  - Active link highlighting with background accent
+  - Extracted classname helper functions for maintainability
+- **AppFooter**: Global footer with language switcher
+  - Centered language switcher
+  - Border-top styling
+  - Consistent across all pages
+
+### Navigation Patterns
+- **Active Link Highlighting**: Use `useLocation` hook for current path detection
+- **Extracted Classnames**: Use helper functions for navigation link styling
+- **Dashboard as Home**: Dashboard is the initial page, no separate home page
+- **Stat Type Pages**: Each stat type has its own dedicated page
+- **Consistent Layout**: All pages include AppHeader and AppFooter
+
 ### shadcn/ui Components
 - Always use shadcn/ui components when available
 - Follow the established component patterns
@@ -222,6 +263,7 @@ shared/ui/
 - Follow Remix form patterns
 - Use proper error handling
 - Implement proper loading states
+- Support pre-selected values (e.g., default stat type in AddEntryModal)
 
 ## File Naming Conventions
 - Use kebab-case for file names
@@ -238,7 +280,11 @@ shared/ui/
 - Follow DRY principles
 - Keep components focused and single-purpose
 - Use direct imports instead of index files
-- Always use `import * as React from "react"`
+- Always use `import * as React from "react"` when using React hooks
+- Extract repeated classnames into helper functions
+- Use nullish coalescing (`??`) for fallback values
+- Fix all linting errors before committing
+- Run `pnpm lint --fix` to auto-fix import order issues
 
 ## Performance Considerations
 - Use proper React optimization techniques
@@ -269,6 +315,7 @@ shared/ui/
 - Keep commits focused and atomic
 - Write descriptive commit messages
 - Use proper branching strategies
+- Fix all build errors before committing
 
 ## Security
 - Validate all user inputs
@@ -309,6 +356,9 @@ shared/ui/
 - Test with different languages
 - Use proper number and date formatting
 - Handle pluralization correctly
+- Default to English language
+- No flag emojis in language selector
+- Include translation function in useEffect dependencies when used
 
 ## API Development Patterns
 - Use consistent error message patterns
@@ -317,6 +367,34 @@ shared/ui/
 - Handle errors gracefully
 - Provide fallback data
 - Use proper TypeScript interfaces
+
+## Navigation and Routing
+- Dashboard as initial page (`/dashboard`)
+- Stat type pages: `/weight`, `/heart-rate`, `/sleep`, `/steps`
+- Active link highlighting with background accent
+- Extracted classname helper functions
+- Consistent header and footer across all pages
+- No separate home page or home link
+
+## Build and Development
+- **Build Command**: `pnpm build` - Builds for production (sourcemap warnings suppressed)
+- **Type Check**: `pnpm typecheck` - Runs TypeScript compiler
+- **Lint**: `pnpm lint` - Runs ESLint with TypeScript support
+- **Lint Fix**: `pnpm lint --fix` - Auto-fixes import order and other issues
+- **Development**: `pnpm dev` - Starts development server
+- **Fix Build Errors**: Always run typecheck and lint before committing
+- **Import Order**: ESLint enforces proper import ordering
+- **Unused Imports**: Remove unused React imports from components
+- **Sourcemap Warnings**: Suppressed in production build via Vite config
+
+## Common Issues and Solutions
+- **TypeScript Errors**: Run `pnpm typecheck` to identify and fix type errors
+- **Import Order**: Run `pnpm lint --fix` to auto-fix import order issues
+- **Unused Imports**: Remove unused React imports when not using hooks
+- **Hook Dependencies**: Include all dependencies in useEffect dependency arrays
+- **Broken Exports**: Only export files that actually exist
+- **Next-themes Import**: Use proper import syntax for next-themes types
+- **i18next Import**: Use `createInstance` instead of default import to avoid warnings
 
 ## Future Considerations
 - Plan for scalability
@@ -327,3 +405,7 @@ shared/ui/
 - Consider real API integration
 - Plan for user authentication
 - Consider data visualization
+- Implement real charts on stat pages
+- Add CRUD functionality for health entries
+- Consider adding unit tests
+- Plan for CI/CD pipeline

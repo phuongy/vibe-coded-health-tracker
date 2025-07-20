@@ -1,13 +1,13 @@
 "use client"
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { TrendingUp, Heart, Clock, BarChart3, Plus } from "lucide-react"
 import * as React from "react"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { useTranslation } from "react-i18next"
-import { TrendingUp, Heart, Clock, BarChart3, Plus } from "lucide-react"
+import { z } from "zod"
 import { addHealthEntry, API_ERRORS } from "@/shared/lib/api"
-
+import { Button } from "@/shared/ui/atoms/button/button"
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/ui/atoms/form/form"
+import { Input } from "@/shared/ui/atoms/input/input"
 import {
   Select,
   SelectContent,
@@ -31,8 +32,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/atoms/select/select"
-import { Input } from "@/shared/ui/atoms/input/input"
-import { Button } from "@/shared/ui/atoms/button/button"
 
 const statTypes = [
   {

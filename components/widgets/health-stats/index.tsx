@@ -1,9 +1,9 @@
+import { Link } from "@remix-run/react";
+import { TrendingUp, Heart, Clock, BarChart3 } from "lucide-react";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@remix-run/react";
-import { Card, CardContent } from "@/shared/ui/atoms/card/card";
-import { TrendingUp, Heart, Clock, BarChart3 } from "lucide-react";
 import { fetchHealthStats, type HealthStats, API_ERRORS } from "@/shared/lib/api";
+import { Card, CardContent } from "@/shared/ui/atoms/card/card";
 
 export function HealthStatsWidget() {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export function HealthStatsWidget() {
     };
 
     loadHealthStats();
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (

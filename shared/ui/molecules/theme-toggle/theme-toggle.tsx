@@ -2,7 +2,6 @@
 
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-
 import { Switch } from "@/shared/ui/atoms/switch/switch"
 
 export function ThemeToggle() {

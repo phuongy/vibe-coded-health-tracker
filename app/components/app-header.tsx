@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { ThemeToggle } from "@/shared/ui/molecules/theme-toggle/theme-toggle";
 import { AddEntryModal } from "@/features/dashboard/add-entry-modal";
+import { ThemeToggle } from "@/shared/ui/molecules/theme-toggle/theme-toggle";
 
 export function AppHeader() {
   const { t } = useTranslation();

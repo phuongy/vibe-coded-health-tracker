@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
 import { fetchRecentActivity, type RecentActivity, API_ERRORS } from "@/shared/lib/api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
 
 export function RecentActivityCard() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export function RecentActivityCard() {
     };
 
     loadRecentActivity();
-  }, []);
+  }, [t]);
 
   const formatTimeAgo = (timestamp: string) => {
     const now = new Date();

@@ -88,7 +88,7 @@ module.exports = {
               "sibling",
               "index"
             ],
-            "newlines-between": false,
+            "newlines-between": "never",
             "alphabetize": {
               "order": "asc",
               "caseInsensitive": true

@@ -1,9 +1,8 @@
-import * as React from "react";
-import { useTranslation } from "react-i18next";
 import { Clock } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
-import { AppHeader } from "@/app/components/app-header";
+import { useTranslation } from "react-i18next";
 import { AppFooter } from "@/app/components/app-footer";
+import { AppHeader } from "@/app/components/app-header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
 
 export default function SleepPage() {
   const { t } = useTranslation();

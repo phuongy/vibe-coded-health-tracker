@@ -1,7 +1,7 @@
-import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
-import { Button } from "@/shared/ui/atoms/button/button";
 import { Plus, Heart, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/shared/ui/atoms/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
 import { AddEntryModal } from "./add-entry-modal";
 
 export function QuickActionsCard() {
