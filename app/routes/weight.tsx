@@ -1,11 +1,15 @@
 import { TrendingUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { AppFooter } from "@/app/components/app-footer";
-import { AppHeader } from "@/app/components/app-header";
+import { EditEntryModal } from "@/features/dashboard";
+import { useDialog } from "@/shared/provider/dialog-provider";
+import { Button } from "@/shared/ui/atoms/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
+import { AppFooter } from "@/shared/ui/molecules/app-footer/app-footer";
+import { AppHeader } from "@/shared/ui/molecules/app-header/app-header";
 
 export default function WeightPage() {
   const { t } = useTranslation();
+  const { showDialog } = useDialog();
 
   // Mock data for demonstration
   const mockData = [
@@ -17,6 +21,27 @@ export default function WeightPage() {
     { date: "2024-01-06", value: 74.1 },
     { date: "2024-01-07", value: 73.9 },
   ];
+
+  const handleEdit = (entry: { date: string; value: number }) => {
+    const EditEntryDialogContent = ({ hideDialog }: { hideDialog: () => void }) => (
+      <EditEntryModal
+        isOpen={true}
+        onClose={hideDialog}
+        onSave={(formData) => {
+          console.log("Saving edited entry:", formData);
+          hideDialog();
+        }}
+        initialData={{
+          statType: "weight",
+          value: entry.value,
+          date: entry.date,
+          unit: "kg",
+        }}
+      />
+    );
+    
+    showDialog(EditEntryDialogContent);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,9 +98,13 @@ export default function WeightPage() {
                     <td className="py-3 px-4">{entry.date}</td>
                     <td className="py-3 px-4">{entry.value} {t("units.kg")}</td>
                     <td className="py-3 px-4">
-                      <button className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                      <Button 
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleEdit(entry)}
+                      >
                         {t("common.edit")}
-                      </button>
+                      </Button>
                     </td>
                   </tr>
                 ))}

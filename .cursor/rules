@@ -21,10 +21,13 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 ## Code Style & Conventions
 
 ### React Import Style
-- **Always use namespace imports**: `import * as React from "react"`
-- **Never use default imports**: Don't use `import React from "react"`
-- **Use React namespace**: Access hooks as `React.useState`, `React.useEffect`, etc.
+- **ALWAYS use namespace imports**: `import * as React from "react"` - This is MANDATORY
+- **NEVER use default imports**: Don't use `import React from "react"`
+- **NEVER use destructured imports**: Don't use `import { useState, useEffect } from "react"`
+- **ALWAYS use React namespace**: Access hooks as `React.useState`, `React.useEffect`, `React.useCallback`, etc.
 - **Remove unused imports**: Only import React when actually using React hooks or JSX
+- **Consistent pattern**: Every file that uses React hooks MUST follow this pattern
+- **No exceptions**: This rule applies to ALL React components and hooks usage
 
 ### File Organization
 - Use `@/` alias for imports from the app directory (configured in tsconfig.json)
@@ -57,7 +60,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **API imports**: `@/shared/lib/api`
 - **i18n imports**: `@/shared/lib/i18n`
 - **App components**: `@/app/components/app-header`, `@/app/components/app-footer`
-- **Provider imports**: `@/shared/provider/theme-provider`
+- **Provider imports**: `@/shared/provider/theme-provider`, `@/shared/provider/toast-provider`, `@/shared/provider/dialog-provider`
 
 ### Import Order
 1. React and external libraries
@@ -81,9 +84,12 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - Follow React hooks best practices
 - Use proper accessibility attributes
 - Each component should be in its own directory with descriptive filename
-- Always use `import * as React from "react"` pattern when using React hooks
+- **MANDATORY**: Always use `import * as React from "react"` pattern when using React hooks
+- **MANDATORY**: Access all hooks via React namespace: `React.useState`, `React.useEffect`, etc.
+- **NEVER**: Use destructured imports like `import { useState } from "react"`
 - Remove unused React imports from components that don't use hooks
 - Extract repeated classnames into helper functions for maintainability
+- **Action Buttons**: Use shadcn Button component with appropriate variants (secondary for edit buttons)
 
 ### Internationalization (i18n)
 - **Always use translation keys**: Never hardcode strings in components
@@ -147,6 +153,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - Composition of widgets and features
   - Dashboard as initial page (`/dashboard`)
   - Stat type pages: `/weight`, `/heart-rate`, `/sleep`, `/steps`
+  - Edit functionality with modal dialogs using custom hooks
 - **widgets**: Self-contained page sections
   - Complex UI components that combine features
   - Page-specific business logic
@@ -157,7 +164,9 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - Feature-specific state management
   - API calls and data transformations
   - Form handling and validation
-  - AddEntryModal with pre-selected stat types
+  - AddEntryDialog with pre-selected stat types (uses dialog context)
+  - EditEntryModal with pre-populated data and disabled stat type (uses dialog context)
+  - Direct dialog context integration (no intermediate hooks)
 - **entities**: Business entities
   - Data models and business logic
   - Entity-specific operations
@@ -178,6 +187,8 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - `shared/ui/atoms/dialog/dialog.tsx` - Basic dialog component
   - `shared/ui/atoms/form/form.tsx` - Form components with react-hook-form
   - `shared/ui/atoms/label/label.tsx` - Basic label component
+  - `shared/ui/atoms/toast/toast.tsx` - Toast notification component
+  - `shared/ui/atoms/modal/modal.tsx` - Modal dialog component
   - Should be highly reusable and configurable
   - Minimal business logic
   - Focus on presentation and interaction
@@ -221,8 +232,9 @@ shared/ui/
     └── (future complex components)
 ```
 
-### App Components
+### App Components (shared/ui/molecules)
 - **AppHeader**: Global navigation header with active link highlighting
+  - Location: `shared/ui/molecules/app-header/app-header.tsx`
   - Dashboard title link
   - Stat type navigation links (Weight, Heart Rate, Sleep, Steps)
   - Theme toggle
@@ -230,9 +242,23 @@ shared/ui/
   - Active link highlighting with background accent
   - Extracted classname helper functions for maintainability
 - **AppFooter**: Global footer with language switcher
+  - Location: `shared/ui/molecules/app-footer/app-footer.tsx`
   - Centered language switcher
   - Border-top styling
   - Consistent across all pages
+- **HealthStatsWidget**: Dashboard health statistics widget
+  - Location: `shared/ui/molecules/health-stats/health-stats.tsx`
+  - Displays health metrics and statistics
+  - Reusable across different pages
+- **ToastProvider**: Global context provider for toast notifications
+  - Wraps entire app in root.tsx
+  - Provides showToast/hideToast functions
+  - Renders toasts at root level with proper z-index
+- **DialogProvider**: Global context provider for modal dialogs
+  - Wraps entire app in root.tsx
+  - Provides showDialog/hideDialog functions
+  - Renders dialogs at root level with proper z-index
+  - Handles accessibility and keyboard navigation
 
 ### Navigation Patterns
 - **Active Link Highlighting**: Use `useLocation` hook for current path detection
@@ -257,6 +283,17 @@ shared/ui/
 - ThemeToggle component handles theme switching
 - LanguageSwitcher component handles language switching
 
+### UI Context Management
+- **ToastProvider**: Global context for toast notifications
+- **DialogProvider**: Global context for modal dialogs
+- **useToast Hook**: Access toast context functions from any component
+- **useDialog Hook**: Access dialog context functions from any component
+- **showDialog/showToast**: Functions to display UI elements at root level
+- **hideDialog/hideToast**: Functions to hide UI elements
+- **Root Level Rendering**: Toasters and dialogs render at app root for proper z-index
+- **Component Type Pattern**: Dialog context expects component types, not React elements
+- **Accessibility**: Proper ARIA labels and keyboard navigation support
+
 ### Form Handling
 - Use react-hook-form for form state
 - Use zod for validation schemas
@@ -264,7 +301,24 @@ shared/ui/
 - Follow Remix form patterns
 - Use proper error handling
 - Implement proper loading states
-- Support pre-selected values (e.g., default stat type in AddEntryModal)
+- Support pre-selected values (e.g., default stat type in AddEntryDialog)
+- **Edit Forms**: Pre-populated with existing data, stat type disabled
+- **Form Validation**: Same validation rules for add and edit forms
+- **Action Buttons**: "Add" for new entries, "Save" for editing existing entries
+
+### React Hooks Usage Patterns
+- **MANDATORY**: Always use `React.useState` instead of `useState`
+- **MANDATORY**: Always use `React.useEffect` instead of `useEffect`
+- **MANDATORY**: Always use `React.useCallback` instead of `useCallback`
+- **MANDATORY**: Always use `React.useMemo` instead of `useMemo`
+- **MANDATORY**: Always use `React.useRef` instead of `useRef`
+- **MANDATORY**: Always use `React.useContext` instead of `useContext`
+- **MANDATORY**: Always use `React.useReducer` instead of `useReducer`
+- **MANDATORY**: Always use `React.useLayoutEffect` instead of `useLayoutEffect`
+- **MANDATORY**: Always use `React.useImperativeHandle` instead of `useImperativeHandle`
+- **MANDATORY**: Always use `React.useDebugValue` instead of `useDebugValue`
+- **Pattern**: `React.[hookName]` for ALL React hooks
+- **No exceptions**: This applies to ALL React hooks, not just useState
 
 ## File Naming Conventions
 - Use kebab-case for file names
@@ -281,11 +335,14 @@ shared/ui/
 - Follow DRY principles
 - Keep components focused and single-purpose
 - Use direct imports instead of index files
-- Always use `import * as React from "react"` when using React hooks
+- **MANDATORY**: Always use `import * as React from "react"` when using React hooks
+- **MANDATORY**: Access all React hooks via React namespace (React.useState, React.useEffect, etc.)
+- **NEVER**: Use destructured React imports like `import { useState, useEffect } from "react"`
 - Extract repeated classnames into helper functions
 - Use nullish coalescing (`??`) for fallback values
 - Fix all linting errors before committing
 - Run `pnpm lint --fix` to auto-fix import order issues
+- **React Import Compliance**: Ensure all React imports follow the namespace pattern
 
 ## Performance Considerations
 - Use proper React optimization techniques
@@ -388,6 +445,8 @@ shared/ui/
 - **Unused Imports**: Remove unused React imports from components
 - **Sourcemap Warnings**: Suppressed in production build via Vite config
 - **Deployment**: Configured for Netlify with netlify.toml and proper redirects
+- **React Import Compliance**: ESLint will catch incorrect React import patterns
+- **Hook Usage Verification**: Ensure all React hooks use `React.[hookName]` pattern
 
 ## Deployment Configuration
 
@@ -424,6 +483,9 @@ shared/ui/
 - **i18next Import**: Use `createInstance` instead of default import to avoid warnings
 - **Build Failures**: Check Node.js version and pnpm installation
 - **Deployment Issues**: Verify netlify.toml configuration and build output
+- **React Import Errors**: ALWAYS use `import * as React from "react"` and access hooks via `React.useState`, `React.useEffect`, etc.
+- **Destructured React Imports**: NEVER use `import { useState } from "react"` - this is FORBIDDEN
+- **React Hook Usage**: ALL React hooks must be accessed via React namespace
 
 ## Future Considerations
 - Plan for scalability

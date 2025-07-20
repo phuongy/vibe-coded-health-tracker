@@ -6,7 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { DialogProvider } from "@/shared/provider/dialog-provider";
 import { ThemeProvider } from "@/shared/provider/theme-provider";
+import { ToastProvider } from "@/shared/provider/toast-provider";
 import "@/shared/lib/i18n";
 
 import "./tailwind.css";
@@ -40,7 +42,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ToastProvider>
+            <DialogProvider>
+              {children}
+            </DialogProvider>
+          </ToastProvider>
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />

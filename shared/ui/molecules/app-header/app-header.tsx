@@ -1,11 +1,24 @@
 import { Link, useLocation } from "@remix-run/react";
+import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { AddEntryModal } from "@/features/dashboard/add-entry-modal";
+import { AddEntryDialog } from "@/features/dashboard/add-entry-dialog";
+import { useDialog } from "@/shared/provider/dialog-provider";
 import { ThemeToggle } from "@/shared/ui/molecules/theme-toggle/theme-toggle";
 
 export function AppHeader() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { showDialog } = useDialog();
+  
+  const handleAddEntry = () => {
+    const AddEntryDialogContent = ({ hideDialog }: { hideDialog: () => void }) => (
+      <AddEntryDialog
+        onClose={hideDialog}
+      />
+    );
+    
+    showDialog(AddEntryDialogContent);
+  };
   
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -65,7 +78,13 @@ export function AppHeader() {
               {t("statTypes.steps")}
             </Link>
             <ThemeToggle />
-            <AddEntryModal />
+            <button
+              onClick={handleAddEntry}
+              className="px-3 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              {t("addEntry.addEntry")}
+            </button>
           </div>
         </div>
       </div>

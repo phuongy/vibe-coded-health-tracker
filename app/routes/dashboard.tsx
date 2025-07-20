@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { AppFooter } from "@/app/components/app-footer";
-import { AppHeader } from "@/app/components/app-header";
-import { HealthStatsWidget } from "@/components/widgets/health-stats";
 import { QuickActionsCard } from "@/features/dashboard/navigation";
 import { RecentActivityCard } from "@/features/dashboard/recent-activity";
+import { AppFooter } from "@/shared/ui/molecules/app-footer/app-footer";
+import { AppHeader } from "@/shared/ui/molecules/app-header/app-header";
+import { HealthStatsWidget } from "@/shared/ui/molecules/health-stats/health-stats";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
