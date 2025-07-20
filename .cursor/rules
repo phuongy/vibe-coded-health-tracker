@@ -1,7 +1,7 @@
 # Cursor Rules for Health Tracker Project
 
 ## Project Overview
-This is a health tracking application built with Remix, React, TypeScript, and shadcn/ui components. The project uses Tailwind CSS for styling, follows modern React patterns with Feature-Sliced Design (FSD) architecture and Atomic Design principles, and includes full internationalization (i18n) support.
+This is a health tracking application built with Remix, React, TypeScript, and shadcn/ui components. The project uses Tailwind CSS for styling, follows modern React patterns with Feature-Sliced Design (FSD) architecture and Atomic Design principles, and includes full internationalization (i18n) support. The app is configured for deployment on Netlify.
 
 ## Technology Stack
 - **Framework**: Remix with Vite
@@ -16,6 +16,7 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Navigation**: React Router with active link highlighting
 - **Linting**: ESLint with TypeScript support
 - **Build Tool**: Vite with Remix integration
+- **Deployment**: Netlify with automatic builds and CDN
 
 ## Code Style & Conventions
 
@@ -386,6 +387,32 @@ shared/ui/
 - **Import Order**: ESLint enforces proper import ordering
 - **Unused Imports**: Remove unused React imports from components
 - **Sourcemap Warnings**: Suppressed in production build via Vite config
+- **Deployment**: Configured for Netlify with netlify.toml and proper redirects
+
+## Deployment Configuration
+
+### Netlify Setup
+- **Configuration File**: `netlify.toml` - Build settings and redirects
+- **Node Version**: `.nvmrc` specifies Node.js 20
+- **Build Command**: `pnpm build`
+- **Publish Directory**: `build/client`
+- **Entry Point**: `build/client/index.html` - Serves the Remix app
+- **SPA Redirects**: Configured for client-side routing
+- **Security Headers**: Added for better security
+- **Asset Caching**: Optimized for performance
+
+### Deployment Process
+1. **Git Integration**: Connect repository to Netlify for automatic deployments
+2. **Build Process**: Netlify runs `pnpm build` on every push
+3. **Asset Optimization**: Vite optimizes and bundles all assets
+4. **CDN Distribution**: Netlify serves assets from global CDN
+5. **HTTPS**: Automatic SSL certificates
+6. **Custom Domains**: Easy domain configuration
+
+### Environment Configuration
+- **No Required Variables**: App works with mock data out of the box
+- **Optional Variables**: Can be added for real API integration
+- **Build Environment**: Node.js 20 with pnpm package manager
 
 ## Common Issues and Solutions
 - **TypeScript Errors**: Run `pnpm typecheck` to identify and fix type errors
@@ -395,6 +422,8 @@ shared/ui/
 - **Broken Exports**: Only export files that actually exist
 - **Next-themes Import**: Use proper import syntax for next-themes types
 - **i18next Import**: Use `createInstance` instead of default import to avoid warnings
+- **Build Failures**: Check Node.js version and pnpm installation
+- **Deployment Issues**: Verify netlify.toml configuration and build output
 
 ## Future Considerations
 - Plan for scalability
@@ -409,3 +438,8 @@ shared/ui/
 - Add CRUD functionality for health entries
 - Consider adding unit tests
 - Plan for CI/CD pipeline
+- Add real-time data synchronization
+- Implement user accounts and data persistence
+- Add data export/import functionality
+- Consider PWA capabilities
+- Plan for mobile app development
