@@ -396,7 +396,7 @@ shared/ui/
 - **Node Version**: `.nvmrc` specifies Node.js 20
 - **Build Command**: `pnpm build`
 - **Publish Directory**: `build/client`
-- **Entry Point**: `build/client/index.html` - Serves the Remix app
+- **Entry Point**: `public/index.html` - Template copied to build/client/index.html
 - **SPA Redirects**: Configured for client-side routing
 - **Security Headers**: Added for better security
 - **Asset Caching**: Optimized for performance
