@@ -1,0 +1,329 @@
+# Cursor Rules for Health Tracker Project
+
+## Project Overview
+This is a health tracking application built with Remix, React, TypeScript, and shadcn/ui components. The project uses Tailwind CSS for styling, follows modern React patterns with Feature-Sliced Design (FSD) architecture and Atomic Design principles, and includes full internationalization (i18n) support.
+
+## Technology Stack
+- **Framework**: Remix with Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Icons**: Lucide React
+- **Theme**: Dark/light mode with next-themes
+- **Internationalization**: react-i18next with language detection
+- **Forms**: react-hook-form with zod validation
+- **UI Components**: Radix UI primitives with shadcn/ui
+- **Package Manager**: pnpm
+
+## Code Style & Conventions
+
+### React Import Style
+- **Always use namespace imports**: `import * as React from "react"`
+- **Never use default imports**: Don't use `import React from "react"`
+- **Use React namespace**: Access hooks as `React.useState`, `React.useEffect`, etc.
+
+### File Organization
+- Use `@/` alias for imports from the app directory (configured in tsconfig.json)
+- Follow Feature-Sliced Design (FSD) architecture:
+  - **app**: `app/` - Application configuration, providers, routing, i18n setup
+  - **pages**: `app/routes/` - Page components and routing
+  - **widgets**: `components/widgets/` - Self-contained page sections
+  - **features**: `features/` - Business logic and user interactions
+  - **entities**: `entities/` - Business entities and their logic
+  - **shared**: `shared/` - Reusable utilities, UI components, types, i18n config
+- Follow Atomic Design principles for component organization within shared:
+  - **Atoms**: `shared/ui/atoms/` - Basic building blocks (Button, Card, Switch, Input, Select, Dialog, Form, Label)
+  - **Molecules**: `shared/ui/molecules/` - Simple combinations (ThemeToggle, LanguageSwitcher)
+  - **Organisms**: `shared/ui/organisms/` - Complex UI sections
+- Each UI component lives in its own directory with the component file named after the component
+- shadcn/ui components go in `shared/ui/atoms/`
+- Utilities go in `shared/lib/`
+- API functions go in `shared/lib/api.ts`
+- i18n configuration goes in `shared/lib/i18n.ts`
+
+### Import Patterns
+- **Always use `@/` alias**: Never use `~` for imports
+- **Direct imports**: Import directly from component files, not index files
+- **Component imports**: `@/shared/ui/atoms/button/button`
+- **Widget imports**: `@/components/widgets/health-stats`
+- **Feature imports**: `@/features/dashboard`
+- **Entity imports**: `@/entities/user`
+- **Utility imports**: `@/shared/lib/utils`
+- **API imports**: `@/shared/lib/api`
+- **i18n imports**: `@/shared/lib/i18n`
+
+### Import Order
+1. React and external libraries
+2. Internal components and utilities (using @/ alias)
+3. Relative imports
+4. Type imports
+
+### FSD Import Rules
+- **Dependency Direction**: Higher layers can import from lower layers
+  - app → pages → widgets → features → entities → shared
+- **No Circular Dependencies**: Lower layers cannot import from higher layers
+- **No Index Files**: Import directly from component files
+- **Absolute Imports**: Use `@/` alias for cross-slice imports
+
+### Component Guidelines
+- Use functional components with TypeScript
+- Prefer shadcn/ui components over custom implementations
+- Use proper TypeScript types and interfaces
+- Follow React hooks best practices
+- Use proper accessibility attributes
+- Each component should be in its own directory with descriptive filename
+- Always use `import * as React from "react"` pattern
+
+### Internationalization (i18n)
+- **Always use translation keys**: Never hardcode strings in components
+- **Use useTranslation hook**: `const { t } = useTranslation()`
+- **Translation keys**: Use descriptive, nested keys (e.g., `t("dashboard.title")`)
+- **Translation files**: All translations in `shared/lib/i18n.ts`
+- **Supported languages**: English (en), Spanish (es), French (fr)
+- **Language detection**: Automatic with localStorage fallback
+- **Error messages**: All error messages must be translatable
+- **Units and values**: All units and health metrics must be translatable
+
+### API Patterns
+- **Mock API functions**: Use `shared/lib/api.ts` for mock data
+- **Error handling**: All API errors must be translatable
+- **Loading states**: Implement proper loading states for all API calls
+- **Error states**: Implement proper error states with translated messages
+- **API error constants**: Use `API_ERRORS` object for consistent error messages
+- **Simulated delays**: Use realistic network delays for better UX
+
+### Form Handling
+- **react-hook-form**: Use for form state management
+- **zod validation**: Use for form validation schemas
+- **Translated validation**: All validation messages must be translatable
+- **Proper error handling**: Handle form submission errors gracefully
+- **Loading states**: Show loading states during form submission
+
+### Styling Guidelines
+- Use Tailwind CSS classes
+- Prefer CSS variables for theming (already configured)
+- Use shadcn/ui design tokens
+- Support both light and dark themes
+- Use responsive design patterns
+- Use proper color contrast ratios
+
+### TypeScript Best Practices
+- Use strict TypeScript configuration
+- Define proper interfaces for props
+- Use proper type annotations
+- Avoid `any` types
+- Use proper generic types where needed
+- Use proper type inference where possible
+
+## Component Patterns
+
+### Feature-Sliced Design (FSD) Architecture
+- **app**: Application layer
+  - Configuration, providers, routing setup
+  - Global styles and theme providers
+  - App-wide state management
+  - i18n initialization and configuration
+- **pages**: Page components
+  - Route components with page-specific logic
+  - Data fetching and page-level state
+  - Composition of widgets and features
+- **widgets**: Self-contained page sections
+  - Complex UI components that combine features
+  - Page-specific business logic
+  - Reusable across different pages
+  - API data fetching and state management
+- **features**: Business logic and user interactions
+  - User actions and business processes
+  - Feature-specific state management
+  - API calls and data transformations
+  - Form handling and validation
+- **entities**: Business entities
+  - Data models and business logic
+  - Entity-specific operations
+  - Domain-driven design principles
+- **shared**: Reusable utilities and components
+  - UI components, utilities, types
+  - No business logic, pure functionality
+  - Framework-agnostic code
+  - i18n configuration and API utilities
+
+### Atomic Design Principles (within shared/ui)
+- **Atoms**: Smallest functional units
+  - `shared/ui/atoms/button/button.tsx` - Basic button component
+  - `shared/ui/atoms/card/card.tsx` - Basic card component
+  - `shared/ui/atoms/switch/switch.tsx` - Basic switch component
+  - `shared/ui/atoms/input/input.tsx` - Basic input component
+  - `shared/ui/atoms/select/select.tsx` - Basic select component
+  - `shared/ui/atoms/dialog/dialog.tsx` - Basic dialog component
+  - `shared/ui/atoms/form/form.tsx` - Form components with react-hook-form
+  - `shared/ui/atoms/label/label.tsx` - Basic label component
+  - Should be highly reusable and configurable
+  - Minimal business logic
+  - Focus on presentation and interaction
+- **Molecules**: Simple combinations of atoms
+  - `shared/ui/molecules/theme-toggle/theme-toggle.tsx` - Combines Switch + Icons
+  - `shared/ui/molecules/language-switcher/language-switcher.tsx` - Language selection
+  - Combine 2-3 atoms with simple logic
+  - Handle basic state and interactions
+  - Still reusable across different contexts
+- **Organisms**: Complex UI sections
+  - Combine multiple molecules and atoms
+  - Handle complex state and business logic
+  - Specific to particular use cases
+
+### Component Directory Structure
+```
+shared/ui/
+├── atoms/
+│   ├── button/
+│   │   └── button.tsx
+│   ├── card/
+│   │   └── card.tsx
+│   ├── switch/
+│   │   └── switch.tsx
+│   ├── input/
+│   │   └── input.tsx
+│   ├── select/
+│   │   └── select.tsx
+│   ├── dialog/
+│   │   └── dialog.tsx
+│   ├── form/
+│   │   └── form.tsx
+│   └── label/
+│       └── label.tsx
+├── molecules/
+│   ├── theme-toggle/
+│   │   └── theme-toggle.tsx
+│   └── language-switcher/
+│       └── language-switcher.tsx
+└── organisms/
+    └── (future complex components)
+```
+
+### shadcn/ui Components
+- Always use shadcn/ui components when available
+- Follow the established component patterns
+- Use proper variants and sizes
+- Maintain accessibility standards
+- Place in appropriate atomic design layer
+- Use Radix UI primitives as base
+
+### Theme Integration
+- Use CSS variables for colors
+- Support dark/light mode switching
+- Use proper contrast ratios
+- Test both themes
+- ThemeToggle component handles theme switching
+- LanguageSwitcher component handles language switching
+
+### Form Handling
+- Use react-hook-form for form state
+- Use zod for validation schemas
+- Use proper form validation with translated messages
+- Follow Remix form patterns
+- Use proper error handling
+- Implement proper loading states
+
+## File Naming Conventions
+- Use kebab-case for file names
+- Use PascalCase for component names
+- Use camelCase for functions and variables
+- Use UPPER_SNAKE_CASE for constants
+- Component files should be named after the component (e.g., `button.tsx`, `card.tsx`)
+- Never use `index.tsx` for component files
+
+## Code Quality
+- Write self-documenting code
+- Use meaningful variable and function names
+- Add proper JSDoc comments for complex functions
+- Follow DRY principles
+- Keep components focused and single-purpose
+- Use direct imports instead of index files
+- Always use `import * as React from "react"`
+
+## Performance Considerations
+- Use proper React optimization techniques
+- Implement proper loading states
+- Use proper error boundaries
+- Optimize bundle size
+- Use proper caching strategies
+- Implement proper HMR configuration
+
+## Accessibility
+- Use proper semantic HTML
+- Implement proper ARIA attributes
+- Ensure keyboard navigation
+- Maintain proper color contrast
+- Test with screen readers
+- Support multiple languages
+
+## Testing Guidelines
+- Write unit tests for utilities
+- Write integration tests for components
+- Test both light and dark themes
+- Test accessibility features
+- Test internationalization
+- Use proper testing patterns
+
+## Git Workflow
+- Use conventional commit messages
+- Keep commits focused and atomic
+- Write descriptive commit messages
+- Use proper branching strategies
+
+## Security
+- Validate all user inputs
+- Use proper authentication patterns
+- Implement proper authorization
+- Follow security best practices
+- Sanitize data appropriately
+
+## Documentation
+- Document complex business logic
+- Keep README up to date
+- Document component APIs
+- Use proper inline comments
+- Maintain code examples
+- Document i18n patterns
+
+## Error Handling
+- Use proper error boundaries
+- Implement proper error states
+- Use proper logging
+- Handle edge cases gracefully
+- Provide user-friendly error messages
+- All error messages must be translatable
+
+## Performance Monitoring
+- Monitor bundle size
+- Track performance metrics
+- Optimize loading times
+- Use proper caching
+- Monitor user experience
+- Monitor i18n performance
+
+## Internationalization Best Practices
+- Never hardcode strings in components
+- Use descriptive translation keys
+- Group related translations logically
+- Support RTL languages if needed
+- Test with different languages
+- Use proper number and date formatting
+- Handle pluralization correctly
+
+## API Development Patterns
+- Use consistent error message patterns
+- Implement proper loading states
+- Use realistic network delays
+- Handle errors gracefully
+- Provide fallback data
+- Use proper TypeScript interfaces
+
+## Future Considerations
+- Plan for scalability
+- Consider additional languages
+- Plan for mobile optimization
+- Consider offline capabilities
+- Plan for data persistence
+- Consider real API integration
+- Plan for user authentication
+- Consider data visualization

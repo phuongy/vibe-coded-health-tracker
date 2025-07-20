@@ -21,4 +21,15 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  css: {
+    devSourcemap: true,
+  },
+  server: {
+    hmr: {
+      overlay: false,
+    },
+  },
+  optimizeDeps: {
+    include: ["@radix-ui/react-dialog", "@radix-ui/react-select", "@radix-ui/react-label", "@radix-ui/react-slot"],
+  },
 });

@@ -45,7 +45,10 @@ module.exports = {
           { name: "NavLink", linkAttribute: "to" },
         ],
         "import/resolver": {
-          typescript: {},
+          typescript: {
+            alwaysTryTypes: true,
+            project: "./tsconfig.json",
+          },
         },
       },
     },
@@ -56,13 +59,14 @@ module.exports = {
       plugins: ["@typescript-eslint", "import"],
       parser: "@typescript-eslint/parser",
       settings: {
-        "import/internal-regex": "^~/",
+        "import/internal-regex": "^[~@]/",
         "import/resolver": {
           node: {
             extensions: [".ts", ".tsx"],
           },
           typescript: {
             alwaysTryTypes: true,
+            project: "./tsconfig.json",
           },
         },
       },
@@ -71,6 +75,28 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
       ],
+      rules: {
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index"
+            ],
+            "newlines-between": false,
+            "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+            }
+          }
+        ],
+        "import/no-unresolved": "error"
+      },
     },
 
     // Node
