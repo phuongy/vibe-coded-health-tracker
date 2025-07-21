@@ -11,13 +11,7 @@ export function AppHeader() {
   const { showDialog } = useDialog();
   
   const handleAddEntry = () => {
-    const AddEntryDialogContent = ({ hideDialog }: { hideDialog: () => void }) => (
-      <AddEntryDialog
-        onClose={hideDialog}
-      />
-    );
-    
-    showDialog(AddEntryDialogContent);
+    showDialog(({ onClose }) => <AddEntryDialog onClose={onClose} />)
   };
   
   const isActive = (path: string) => {

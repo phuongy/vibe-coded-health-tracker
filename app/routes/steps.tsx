@@ -1,15 +1,44 @@
+import { ColumnDef } from "@tanstack/react-table";
 import { BarChart3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { EditEntryModal } from "@/features/dashboard";
 import { useDialog } from "@/shared/provider/dialog-provider";
 import { Button } from "@/shared/ui/atoms/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/atoms/card/card";
+import { Chart } from "@/shared/ui/atoms/chart/chart";
+import { DataTable } from "@/shared/ui/atoms/table/table";
 import { AppFooter } from "@/shared/ui/molecules/app-footer/app-footer";
 import { AppHeader } from "@/shared/ui/molecules/app-header/app-header";
 
 export default function StepsPage() {
   const { t } = useTranslation();
   const { showDialog } = useDialog();
+
+  // Define table columns
+  const columns: ColumnDef<{ date: string; value: number }>[] = [
+    {
+      accessorKey: "date",
+      header: t("common.date"),
+    },
+    {
+      accessorKey: "value",
+      header: t("addEntry.value"),
+      cell: ({ row }) => `${row.getValue("value")} ${t("units.steps")}`,
+    },
+    {
+      id: "actions",
+      header: t("common.actions"),
+      cell: ({ row }) => (
+        <Button 
+          variant="secondary"
+          size="sm"
+          onClick={() => handleEdit(row.original)}
+        >
+          {t("common.edit")}
+        </Button>
+      ),
+    },
+  ];
 
   // Mock data for demonstration
   const mockData = [
@@ -67,13 +96,12 @@ export default function StepsPage() {
           <CardTitle>{t("statTypes.steps")} {t("healthStats.history")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-              <p className="text-muted-foreground">{t("common.loading")}</p>
-              <p className="text-sm text-muted-foreground">Line chart will be implemented here</p>
-            </div>
-          </div>
+          <Chart 
+            data={mockData}
+            valueLabel={t("units.steps")}
+            color="#f97316"
+            height={300}
+          />
         </CardContent>
       </Card>
 
@@ -83,34 +111,11 @@ export default function StepsPage() {
           <CardTitle>{t("statTypes.steps")} {t("healthStats.entries")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium">{t("common.date")}</th>
-                  <th className="text-left py-3 px-4 font-medium">{t("addEntry.value")}</th>
-                  <th className="text-left py-3 px-4 font-medium">{t("common.actions")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockData.map((entry, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <td className="py-3 px-4">{entry.date}</td>
-                    <td className="py-3 px-4">{entry.value.toLocaleString()} {t("units.steps")}</td>
-                    <td className="py-3 px-4">
-                      <Button 
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleEdit(entry)}
-                      >
-                        {t("common.edit")}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable 
+            columns={columns} 
+            data={mockData}
+            showPagination={false}
+          />
         </CardContent>
       </Card>
       </main>

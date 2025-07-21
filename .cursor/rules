@@ -53,14 +53,17 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - **Always use `@/` alias**: Never use `~` for imports
 - **Direct imports**: Import directly from component files, not index files
 - **Component imports**: `@/shared/ui/atoms/button/button`
-- **Widget imports**: `@/components/widgets/health-stats`
+- **Molecule imports**: `@/shared/ui/molecules/component-name/component-name`
+- **Widget imports**: `@/shared/ui/molecules/health-stats/health-stats`
 - **Feature imports**: `@/features/dashboard`
 - **Entity imports**: `@/entities/user`
 - **Utility imports**: `@/shared/lib/utils`
 - **API imports**: `@/shared/lib/api`
 - **i18n imports**: `@/shared/lib/i18n`
-- **App components**: `@/app/components/app-header`, `@/app/components/app-footer`
+- **App components**: `@/shared/ui/molecules/app-header/app-header`, `@/shared/ui/molecules/app-footer/app-footer`
 - **Provider imports**: `@/shared/provider/theme-provider`, `@/shared/provider/toast-provider`, `@/shared/provider/dialog-provider`
+- **Table imports**: `@/shared/ui/atoms/table/table`, `@tanstack/react-table`
+- **Chart imports**: `@/shared/ui/atoms/chart/chart`, `recharts`
 
 ### Import Order
 1. React and external libraries
@@ -90,6 +93,8 @@ This is a health tracking application built with Remix, React, TypeScript, and s
 - Remove unused React imports from components that don't use hooks
 - Extract repeated classnames into helper functions for maintainability
 - **Action Buttons**: Use shadcn Button component with appropriate variants (secondary for edit buttons)
+- **Tables**: Use TanStack Table for all data tables with proper column definitions
+- **Charts**: Use Recharts Chart component for line charts with proper data formatting and tooltips
 
 ### Internationalization (i18n)
 - **Always use translation keys**: Never hardcode strings in components
@@ -187,6 +192,8 @@ This is a health tracking application built with Remix, React, TypeScript, and s
   - `shared/ui/atoms/dialog/dialog.tsx` - Basic dialog component
   - `shared/ui/atoms/form/form.tsx` - Form components with react-hook-form
   - `shared/ui/atoms/label/label.tsx` - Basic label component
+  - `shared/ui/atoms/table/table.tsx` - TanStack Table component with sorting and pagination
+  - `shared/ui/atoms/chart/chart.tsx` - Recharts line chart component with tooltips and formatting
   - `shared/ui/atoms/toast/toast.tsx` - Toast notification component
   - `shared/ui/atoms/modal/modal.tsx` - Modal dialog component
   - Should be highly reusable and configurable

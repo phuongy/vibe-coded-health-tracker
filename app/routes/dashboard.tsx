@@ -27,14 +27,14 @@ export default function DashboardPage() {
         <HealthStatsWidget />
 
         {/* Dashboard Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Quick Actions */}
-          <div className="lg:col-span-1">
+          <div>
             <QuickActionsCard />
           </div>
 
           {/* Recent Activity */}
-          <div className="lg:col-span-2">
+          <div>
             <RecentActivityCard />
           </div>
         </div>

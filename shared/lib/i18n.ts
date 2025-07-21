@@ -96,6 +96,7 @@ i18n
             yesterday: "Yesterday",
             history: "History",
             entries: "Entries",
+            trend: "Trend",
           },
           
           // Quick Actions
@@ -214,6 +215,7 @@ i18n
             yesterday: "Ayer",
             history: "Historial",
             entries: "Entradas",
+            trend: "Tendencia",
           },
           
           // Quick Actions
@@ -332,6 +334,7 @@ i18n
             yesterday: "Hier",
             history: "Historique",
             entries: "Entrées",
+            trend: "Tendance",
           },
           
           // Quick Actions
